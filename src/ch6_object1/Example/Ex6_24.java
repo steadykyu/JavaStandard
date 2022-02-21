@@ -8,6 +8,7 @@ public class Ex6_24 {
         }else{
             return -num;
         }
+//        return num >=0 ? num : -num;
 
     }
 

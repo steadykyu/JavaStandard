@@ -2,6 +2,10 @@ package ch6_object1.Example;
 
 public class Ex6_22 {
     static Boolean isNumber(String str){
+        if(str==null || str.equals(""))
+            return false;
+
+
         Boolean isNum = false;
         for(int i = 0 ; i < str.length();i++){
             char c = str.charAt(i);
@@ -20,5 +24,8 @@ public class Ex6_22 {
         System.out.println(str+"는 숫자입니까? "+isNumber(str));
         str = "1234o";
         System.out.println(str+"는 숫자입니까 ? "+isNumber(str));
+        str = null;
+        System.out.println(str+"는 숫자입니까 ? "+isNumber(str));
+
     }
 }

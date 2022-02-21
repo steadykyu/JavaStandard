@@ -11,6 +11,7 @@ class MyTv {
     void turnOnOff() {
         if(isPowerOn) isPowerOn=false;
         else isPowerOn = true;
+        //isPowerOn = !isPowerOn
     }
 
     void volumeUp() {
@@ -26,6 +27,11 @@ class MyTv {
     void channelUp() {
 
         if(channel++ == MAX_CHANNEL) channel = MIN_CHANNEL;
+//        if(channel==MAX_CHANNEL) {
+//            channel = MIN_CHANNEL;
+//        } else {
+//            channel++;
+//        }
     }
     void channelDown() {
         if(channel-- == MIN_CHANNEL) channel = MAX_CHANNEL;
