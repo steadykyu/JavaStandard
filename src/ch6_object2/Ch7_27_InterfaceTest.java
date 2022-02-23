@@ -9,7 +9,7 @@ class B{
         System.out.println("methodB()");
     }
 }
-public class Ch_7_27_InterfaceTest {
+public class Ch7_27_InterfaceTest {
     public static void main(String[] args) {
         A a = new A();
         a.methodA(new B());

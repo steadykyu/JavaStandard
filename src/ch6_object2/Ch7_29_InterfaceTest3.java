@@ -1,6 +1,6 @@
 package ch6_object2;
 
-public class Ch_7_29_InterfaceTest3 {
+public class Ch7_29_InterfaceTest3 {
     public static void main(String[] args) {
         A3 a = new A3();
         a.methodA();

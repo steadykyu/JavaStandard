@@ -1,6 +1,6 @@
 package ch6_object2;
 
-public class ch7_6_SuperTest2 {
+public class Ch7_6_SuperTest2 {
     public static void main(String[] args) {
         Child c = new Child();
         c.method();

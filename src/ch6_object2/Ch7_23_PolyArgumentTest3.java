@@ -49,6 +49,7 @@ class Buyer{
         bonusPoint += p.bonusPoint;
         //item[i++] = p;
         item.add(p);
+        // p 즉 참조변수의 주소값을 추가한다. 근데 이 주소의 타입은 조상타입이지만 자손인스턴스를 가리키고 있는것이다.
         System.out.println(p + "을/를 구매하셨습니다.");
     }
 
@@ -80,7 +81,7 @@ class Buyer{
     }
 }
 
-public class Ch_7_23_PolyArgumentTest3 {
+public class Ch7_23_PolyArgumentTest3 {
     public static void main(String[] args) {
         Buyer b = new Buyer();
         Tv tv = new Tv();

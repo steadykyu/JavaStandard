@@ -9,7 +9,7 @@ public class Ch7_31_InnerEx1 {
 
     static class StaticInner{
         int iv = 200;                   // 인스턴스 변수 : static 메서드는 안에 쓰지도 못했는데, class는 쓸수는 있다.
-        static int cv = 100;
+        static int cv = 200;
     }
 
     void myMethod(){

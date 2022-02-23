@@ -20,7 +20,7 @@ class C2 implements I{
         System.out.println("play in the C");
     }
 }
-public class Ch_7_28_InterfaceTest2 {
+public class Ch7_28_InterfaceTest2 {
     public static void main(String[] args) {
         A2 a = new A2();
         // 인스턴스를 생성하고 매개변수를 통해 동적으로 인스턴스를 제공하는 방법이다.
