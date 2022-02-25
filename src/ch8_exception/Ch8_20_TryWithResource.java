@@ -4,7 +4,7 @@ public class Ch8_20_TryWithResource {
     public static void main(String[] args) {
 
         try(CloseableResource cr = new CloseableResource()){
-            cr.exceptionWork(false); //workexception 발생을 안시킴.
+            cr.exceptionWork(false); //workexception 발생을 안시킴. +  close()가 호출
         }catch (WorkException e){
             e.printStackTrace();
         }catch (CloseException e){

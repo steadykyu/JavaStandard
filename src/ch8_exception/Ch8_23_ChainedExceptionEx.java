@@ -17,11 +17,11 @@ public class Ch8_23_ChainedExceptionEx {
             copyFiles();                //복사
         } catch (SpaceException se) {
             InstallException ie = new InstallException("se 원인으로한 설치 중 예외발생");
-            ie.initCause(se);                                               // 지정한 원인을 원인 예외로 등록
+            ie.initCause(se);                                               // 지정한 예외를 원인 예외로 등록
             throw ie;
         } catch (MemoryException me) {
             InstallException ie = new InstallException("me 원인으로한 설치 중 예외발생");
-            ie.initCause(me);                                               // 지정한 원인을 원인 예외로 등록
+            ie.initCause(me);                                               // 지정한 예외를 원인 예외로 등록
             throw ie;
         } finally {
             deleteTempFiles();
