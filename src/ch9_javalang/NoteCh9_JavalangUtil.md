@@ -208,6 +208,7 @@ String str = new String(utf8_str,"UTF-8");
 ### 기본형 값을 String으로 변환
 + 빈 문자열을 더하거나 valueOf()메서드를 사용하자.
 ```
+String str = ""+100;
 String str2 = String.valueOf(100);
 ```
 
@@ -507,3 +508,38 @@ System.out.println(bd1.setScale(2, HALF_UP)); // 123.46
 + scale을 변경하는 것은 10의 n제곱으로 나누는 것과 같으므로, divider()를 호출할때 처럼 오차가 발생할 수 있다.
 + 그러므로 반올림모드를 지정해주어야한다.
 
+****
+# 추가사항
+### valueOf 추가사항 - char[]배열을 String으로 바꾸기
+```java
+String str1 = new String(result)        // "   가나다"
+String str2 = String.valueOf(result)    // "가나다"
+//이거 쓰면 내장되어있는 parseChar()메서드를 예외없이 동작시키기 위해 trim()으로 char[] 배열의 공백을 다 제거해버리는 것 같다.
+//char[] 의 원본 값을 문자열에 다 가져가고 싶다면 위처럼 String생성 주입으로 해주자.(9_10예제)
+```
+### String을 char[]배열로 바꾸기.
+```java
+1. for문과 String.chatAt(index) 이용하기
+```java
+    public static void main(String[] args) {
+        String s1 = "First String";
+        char[] charArray = new char[s1.length()];
+        for (int i = 0; i < s1.length(); i++) {
+            charArray[i] = s1.charAt(i);
+            System.out.print(charArray[i]);
+        }
+    }
+```
+2.String.toCharArray() 이용하기.
+```
+public class DeclareCharArray {
+    public static void main(String[] args) {
+        String s1 = "First String";
+        char[] charArray = s1.toCharArray();
+        for (char c : charArray) {
+            System.out.print(" " + c);
+        }
+    }
+}
+```
++ 결과 :  F i r s t   S t r i n g
