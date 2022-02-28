@@ -228,7 +228,7 @@ public class FlowEx33 {
 
 
 ### 추가공부
-> 대입후 비교하기
+> 조건문 속에서 대입후 비교하기
 ```java
 while((index = src.indexOf(key, pos))!=-1) {
             count++;
