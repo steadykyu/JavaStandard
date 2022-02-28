@@ -225,3 +225,17 @@ public class FlowEx33 {
 + Loop1 반복문을 나오거나(break Loop1;), 
 + Loop1 반복문의 맨끝으로 갔다가 반복문을 이어갈수 있다.(continue Loop1;) 
 + 이때 continue Loop1;는 System.out.println();를 무시하고 } 간후에 Loop1 반복문으로 갈 것이다.
+
+
+### 추가공부
+> 대입후 비교하기
+```java
+while((index = src.indexOf(key, pos))!=-1) {
+            count++;
+            pos = index + key.length();
+        }
+// 아래와 일치한다.        
+index = src.indexOf(key, pos); // src key 에 와 일치하는 부분의 위치를 반환
+index !=-1 // . index -1 조건식 의 값이 인지 비교
+```
++ 조건문 안에서는 일반적인 자바 연산자 순서와 다르게 대입후 비교할 수 있다.
