@@ -156,9 +156,12 @@ Card c = Card.class.newInstance();
 
 ### 문자열의 비교
 + 문자열 리터럴을 지정하는 방법과 String클래스의 생성자를 사용하는 방법이 있다.
-```
+```java
 String str1 = "abc";            //문자열 리터럴
 String str3 = new String("abc");
+char[] chrArr = new char[]{'a','b','c'};
+String str3 = new String(chrArr);
+
 ```
 > 문자열 리터럴
 ```
@@ -212,6 +215,7 @@ String str2 = String.valueOf(100);
 ```
 int i = Integer.parseInt("100");
 int i2 = Integer.valueOf("100");  
+
 ```
 + valueOf은 반환타입만 다르지, parseInt를 포함하고 있는 메서드이다.(즉 같다)
 + valueOf의 반환 타입은 Integer이지만, 곧 배울 오토박싱에 의해 컴파일시 int로 자동 변환된다.
