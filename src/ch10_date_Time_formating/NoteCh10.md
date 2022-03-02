@@ -23,5 +23,6 @@ Calendar cal = Calendar.getInstance();
   cal.setTime(d)
 ```
 
++ Calendar 의 getTimeInMillis()는 1/1000초를 단위로 값이 존재한다. 그러므로 우리기준의 초단위로 맞추려면 1000으로 나누어주어야한다.
 + 책 or 작성한 코드에서 Calendar의 여러메소드와 상수필드값들을 보도록 하자.
 
