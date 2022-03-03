@@ -39,8 +39,11 @@ class Ch10_6CalendarEx6 {
             System.out.print("   ");
 
         for(int i=1, n=START_DAY_OF_WEEK ; i <= END_DAY; i++, n++) {
-            System.out.print((i < 10)? "  "+i : " "+i );
+            System.out.print((i < 10)? "  "+i : " "+i );            // 글자수 맞추기
             if(n%7==0) System.out.println();
         }
     }
 }
+
+//javac Ch10_6CalendarEx6.java -encoding UTF-8
+//java ch10_date_Time_formating.Ch10_6CalendarEx6 2015 11
