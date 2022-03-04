@@ -274,5 +274,15 @@ public class HashMap extends AbstractMap implements Map, Cloneable, Serializable
 + 참고: equals() 로 비교한 결과가 false 이고 해시코드가 같은경우는 (한 배열요소에 존재하는)같은 링크드 리스트에 저장된 서로 다른 두 데이터가 된다.
 
 
+## 1.11 TreeMap
++ 이진검색트리의 형태로 key와 value의 쌍으로 이루어진 데이터를 저장한다.
++ 기본정렬 방식은 key를 기준으로 오름차순 정렬 형태이다.
++ 검색에 관한 대부분의 경우에는 HashMap이 TreeMap보다 더 뛰어나므로 HashMap을 쓰는게 좋다.
++ 다만 범위검색이나 정렬이 필요한 경우에는 TreeMap을 사용하자.
+
+## 1.12 Properties
++ Hashtable은 (Object, Object)로 저장하는데 비해, Property는 (String, String) 형태로 저장하는 단순화된 컬렉션 클래스이다.
++ 주로 애플리케이션의 환경설정과 관련된 property를 저장하는데 사용되며, 데이터를 파일로부터 읽고 쓰는 편리한 기능을 제공한다.
++ list(), load(), store() 여러 메소드의 사용을 책과 코드를 통해 살펴보자.
 
 
