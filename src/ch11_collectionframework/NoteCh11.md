@@ -285,4 +285,46 @@ public class HashMap extends AbstractMap implements Map, Cloneable, Serializable
 + 주로 애플리케이션의 환경설정과 관련된 property를 저장하는데 사용되며, 데이터를 파일로부터 읽고 쓰는 편리한 기능을 제공한다.
 + list(), load(), store() 여러 메소드의 사용을 책과 코드를 통해 살펴보자.
 
+## 1.13 Collections
++(s 붙여야함!)
++ 배열과 관련된 메서드를 제공하는 Arrays 처럼, Collections는 컬렉션과 관련된 메서드를 제공한다.
++ Arrays에 존재하는 메서드들을 포함하여 추가적인 여러 메서드를 제공한다.
+
+### 컬렉션의 동기화
++ 이전버전의 Vector, Hashtable은 자체적으로 동기화 처리가 되어있었지만, 새로추가된 ArrayList와 HashMap은 필요한 경우에만 java.util.**Collections**클래스의 동기화 메서드를 이용하여 
+처리하도록 변경하였다.
++ 멀티쓰레드 프로그래밍에서 하나의 객체를 여러 쓰레드가 동시에 접근 할 수 있는데, 데이터의 일관성을 유지하기 위해서 공유되는 객체에 동기화(synchronization)가 필요하다.
+> 모든 컬렉션이 가능한데, 예시로 하나의 메서드만 살펴보자.
+```
+static List synchronizedList(List list)
+
+List syncList = Collections.synchronizedList(new ArrayList(...));
+```
+
+### 변경 불가 컬렉션 만들기
++ 컬렉션의 저장된 데이터를 보호하기위해 읽기 전용으로 만들수 있다.
+```
+static List unmodifiableList(List list)
+```
+
+### 싱글톤 컬렉션 만들기
++ 단 하나의 객체만을 저장하는 컬렉션을 만들고 싶을 경우
+```
+static List singletonList(List list)
+```
+
+### 한 종류의 객체만 저장하는 컬렉션 만들기
++ 컬렉션은 모든 종류의 객체를 저장할수 있는데 이는 장점이면서 단점인 부분이다.
++ 한 종류의 객체를 저장하며, 컬렉션에 지정된 종류의 객체만 저장하도록 제한 싶을때는 아래의 메서드를 사용한다.
+```
+static List checkedList(List list, Class type)
+
+List checklist = Collections.checkedList(list, String.class);
+```
++ 사실 지네릭스를 사용하면 컬렉션에 저장할 요소타입을 쉽게 제한 할수 있다.
++ 지네릭스를 호환하지 않는 java버전에서 checked를 사용하자.
+
+## 1.14 컬렉션 클래스 정리 & 요약
++ 책의 그림과 표를 확인하자.
+
 
