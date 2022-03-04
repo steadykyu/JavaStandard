@@ -95,3 +95,19 @@ LinkedList ll = new LinkedList(al);
 ### Deque
 + Queue를 조상으로하는 인터페이스이며, ArrayDeque와 LinkedList를 구현체로 가진다.
 + 한쪽 끝으로만 추가/삭제 가 가능한 Queue와 달리, 양쪽 끝에 추가/삭제가 가능하다.(책 그림 참고)
+
+## 1.5 Iterator, ListIterator, Enumeration
++ 모두다 컬렉션에 저장된 요소를 접근하는데 사용되는 인터페이스이다.
++ Enumeration는 구버전이라 이제 사용을 하지 않고, ListIterator는 Iterator보다 향상된 기능을 가지고 있다.
++ iterator()는 Collection 인터페이스에 정의 된 메서드이므로, 자손인 List와 Set에서도 사용이 가능하다.
++ 각 컬렉션들의 특징에 알맞게 작성되어있다.(순서, 중복상태)
++ Map 인터페이스 자체에는 사용할수 없으나, keySet()등으로 얻은 Set형태로는 iterator()를 호출 할 수 있다.
++ 코드참고
++ 책으로 메서드 꼭 참고하기
+
+### ListIterator
++ Iterator에 양방향 조회기능을 추가했다.(이전방향으로 접근기능을 추가함)
++ 단 List를 구현한 경우에만 사용가능하다.
++ 책으로 메서드 꼭 참고하기
+
+## 1.6 Arrays
