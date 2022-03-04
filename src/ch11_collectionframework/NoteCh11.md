@@ -72,6 +72,12 @@ capacity : 객체 배열의 크기(허용공간)
 ```
 읽는 시간은 느리나, 데이터의 추가 삭제가 빠르다. 데이터가 많을 수록 접근성이 떨어진다.
 ```
++ 처음에 데이터 저장은 ArrayList를 사용한 다음, 작업은 LinkedList로 옮겨서 작업하면 좋은 효율을 가진다.
+```
+ArrayList al = new ArrayList(100000);
+LinkedList ll = new LinkedList(al);
+// 대부분의 컬렉션 클래스들은 서로 변환이 가능한 생성자를 제공한다.
+```
 ## 1.4 Stack과 Queue
 + stack : LIFO(Last in First Out) 구조 - 마지막에 저장한 데이터를 가장 먼저 꺼낸다.
 + Queue : FIFO(First in First Out) 구조 - 처음에 저장한 데이터를 가장 먼저 꺼낸다.
