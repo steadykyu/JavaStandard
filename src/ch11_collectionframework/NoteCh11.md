@@ -111,3 +111,82 @@ LinkedList ll = new LinkedList(al);
 + 책으로 메서드 꼭 참고하기
 
 ## 1.6 Arrays
++ 배열을 다루는데 유용한 메서드가 정의되어있다.
++ 같은 기능의 메서드가 매개변수로 배열의 타입만 다르게 오버로딩되있다.
+
+### 배열의 복사
++ copyOf(), copyOfRange()
++ 배열전체, 배열의 일부를 복사해서 새로운 배열을 만들어 반환한다.
+
+### 배열채우기
++ fill() : 배열의 모든 요소를 지정된 값으로 채운다.
++ setAll() : 배열을 채우는데 매개변수로 함수형 인터페이스를 가진다.
+
+### 배열의 정렬과 검색
++ sort() : 배열을 정렬한다.
++ binarySearch() : 반드시 정렬상태인 배열에 사용하여야, 올바르게 값에 맞는 index를 반환해준다.
+                 : 검색결과 일치하는 요소가 여러개 있다면, 어떤 index 가 나오는지는 알수 없다.
+                 
+                
+### 배열의 비교와 출력
++ equals() : 모든 요소를 비교해서 같으면 true, 다르면 false를 반환한다.
++ deepEquals() : 다차원 배열의 비교가 가능하다.
++ toString() : 일차원 배열의 모든 요소를 문자열로 편하게 출력해준다.
++ deepToString() : 다차원 배열의 요소를 출력해준다.
++ asList(Object... a) : 배열을 List에 담아서 반환한다.
+```
+매개변수 타입이 가변인수이기 때문에, 배열뿐만아니라 저장할 요소만 나열해도 된다.
+이 리스트는 크기를 변경할수 없다. 변경하려면
+List list = new ArrayList(Arrays.asList(1,2,3,4,5));
+```
+
+### ParallelXXX(), spliterator(), stream()
++ parallel로 시작하는 이름의 메서드들은 보다 빠른 결과를 얻기위해 여러 쓰레드가 나누어 작업을 처리한다.
++ spliterator() : 여러 쓰레드가 처리할수 있게 하나의 작업을 여러작업으로 나누는 Spliterator를 반환한다.
++ stream() : 컬렉션을 스트림으로 변환한다.
+
+## 1.7 Comparator와 Comparable
++ Arrays.sort()를 호출하면, 사실 Character클래스(char의 wrapper)의 Comparable의 구현에 의해 정렬되는 것이다.
++ Comparator와 Comparable는 모두 인터페이스 이며, Comparable을 구현한 클래스들은 기본적으로 오름차순으로 정렬되도록 구현하고 있다.
+```
+public interface Comparator{
+      int compare(Object o1, Object o2); // 제한자가 default이므로 사용하려면, 같은 패키지내에서 구현을 따로 해주어야함.
+}
+=============================================
+public interface Comparable{
+      public int compareTo(Object o);
+}
+```
++ Comparable : 기본 정렬기준을 구현하는데 사용.
++ Comparator : 기본 정렬기준 외에 다른 기준으로 정렬하고자 할때 사용
+      - 상수의 형태나 구현한 클래스속 compare() 메소드에서 return값을 수정해주면 정렬 기준을 바꿀 수있다.
++ 코드참고
+```java
+class Ch11_19ComparatorEx {
+    public static void main(String[] args) {
+        String[] strArr = {"cat", "Dog", "lion", "tiger"};
+
+        Arrays.sort(strArr);                          // String의 Comparable구현에 의한 정렬이 되는 중
+        System.out.println("strArr=" + Arrays.toString(strArr));
+
+        Arrays.sort(strArr, String.CASE_INSENSITIVE_ORDER); // 대소문자 구분안함
+        System.out.println("strArr=" + Arrays.toString(strArr));
+
+        Arrays.sort(strArr, new Descending()); // 역순 정렬
+        System.out.println("strArr=" + Arrays.toString(strArr));
+    }
+}
+
+class Descending implements Comparator {
+    public int compare(Object o1, Object o2){
+        if( o1 instanceof Comparable && o2 instanceof Comparable) {
+            Comparable c1 = (Comparable)o1;
+            Comparable c2 = (Comparable)o2;
+            return c1.compareTo(c2) * -1 ; // -1을 곱해서 기본 정렬방식의 역으로 변경한다.
+            // 또는 c2.compareTo(c1)와 같이 순서를 바꿔도 된다.
+
+        }
+        return -1;
+    }
+}
+```
