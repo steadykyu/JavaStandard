@@ -159,7 +159,7 @@ public interface Comparable{
 ```
 + Comparable : 기본 정렬기준을 구현하는데 사용.
 + Comparator : 기본 정렬기준 외에 다른 기준으로 정렬하고자 할때 사용
-      - 상수의 형태나 구현한 클래스속 compare() 메소드에서 return값을 수정해주면 정렬 기준을 바꿀 수있다.
+  * 상수의 형태나 구현한 클래스속 compare() 메소드에서 return값을 수정해주면 정렬 기준을 바꿀 수있다.
 + 코드참고
 ```java
 class Ch11_19ComparatorEx {
