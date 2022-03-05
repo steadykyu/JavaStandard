@@ -190,7 +190,7 @@ class Descending implements Comparator {
     }
 }
 ```
-
++ 참고 블로그 : https://st-lab.tistory.com/243
 ## 1.8 HashSet
 + Set인터페이스를 구현한 가장 대표적인 컬렉션이며, HashSet은 중복된 요소를 저장하지 않는다.
 + 만약 저장순서를 유지하고자 한다면 LinkedHashset을 사용해야한다.
