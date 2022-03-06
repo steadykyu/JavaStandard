@@ -155,3 +155,97 @@ public static void main(String[] args) {
 + ( Apple extends Fruit , Grape extends Fruit)
 + Fruit과 그 자손인 Apple, Grape 클래스들이 들어올 수 있게 된다.
 + 이부분은 코드를 꼭 참고해서 봐도록 하자.( 추가내용 : Comparator<? super T> )
+
+## 1.6 지네릭 메서드
++ 메서드의 선언부에 반환 타입 앞쪽에 지네릭 타입이 선언된 메서드를 지네릭 메서드라고 한다.
+```
+class FruitBox<T>{
+        ...
+        static <T> void sort(List<T> list, Comparator<? super T> c){
+        ...
+        }
+}
+```
++ 매개변수의 T와 반환타입 앞의 T는 별개의 것이다.
++ 원래 static 멤버에는 타입 매개변수를 사용할 수 없으나, 메서드에 지네릭 타입을 선언하고 사용하는 것은 가능하다.
++ 메서드에 선언된 지네릭 타입은 **지역 변수**를 선언한 것과 같다고 생각하면 되는데, 이러한 타입의 매개변수는 메서드 내에서만 지역적으로 사용될 것이기 때문에 
+static이던 아니던 상관이 없다.
+```
+static Juice makeJuice(FruitBox<? extends Fruit> box) {
+        String tmp = "";
+
+        for(Fruit f : box.getList())            
+            tmp += f + " ";
+        return new Juice(tmp);
+    }
+================================================================
+static <? extends Fruit> Juice makeJuice(FruitBox<T> box) {
+        String tmp = "";
+
+        for(Fruit f : box.getList())            
+            tmp += f + " ";
+        return new Juice(tmp);
+    }
+```
++ 이렇게 작업하여, FruitBox 입장에서는 Fruit의 자손 클래스만 가질 수 있었는데, 모든 클래스를 T로 가질 수 있는 상태가 되었다.
++ 그러나 적어도 Juice 메서드에서는 Fruit의 자손 클래스중 하나를 가지게 선언하였음으로, 이 메서드 안에서의 T는 적어도 Fruit의 자손클래스가 올 것이다.
+> 호출
+```
+FruitBox<Fruit> fruitBox = new FruitBox<Fruit>();           // 선언부
+FruitBox<Apple> appleBox = new FruitBox<Apple>();      
+...
+System.out.println(<Fruit>Juicer.makeJuice(fruitBox));      // 이렇게 클래스를 선언 할 수 있다.
+System.out.println(<Apple>Juicer.makeJuice(appleBox));
+```
++ 컴파일러가 선언부를 통해 추정할 수 있으므로 클래스 선언을 생략할 수 있다.
+
+> 여러 매개변수가 존재할때
+```
+public static void printAll(ArrayList<? extends Product> list,
+                            ArrayList<? extends Product> list2) {...}
+========================================================================
+public static <? extends Product> void printAll(ArrayList<T> list,
+                                                ArrayList<T> list2) {...}
+```
+
+## 1.7 지네릭 타입의 형변환
+### 지네릭 타입과 원시타입
+```
+Box         box    = null;
+Box<Object> objbox = null;
+
+box         = (Box)objBox;          // 가능 지네릭 타입 -> 원시타입
+objBox      = (Box<Object>)box;     // 가능 원시타입 -> 지네릭타입
+```
++ 항상 가능하나 경고가 발생한다.
+
+### 대입된 타입이 다른 지네릭 타입끼리 형변환 - 불가능
+```
+Box<Object> objbox = null;
+Box<String> strbox = null;
+        
+objBox      = (Box<Object>)strbox;     // 불가능
+strBox      = (Box<String>)objbox;     // 불가능
+```
++ 이전에 ' Box<Object> objbox = new Box<String>();' 도 안되는 걸 기억하면 당연히 될 수 없다.
+
+### 와일드카드와 지네릭 타입의 형변환
+```
+Box<? extends Object> objbox = new Box<String>(); // 가능
+```
++ 이전에 다형성으로 오버로딩했던 기억을 살려보면, 당연히 가능해야 할 것이다.
++ 참고(책참고)
+```
+Optional 클래스는 Optional<?> 타입의 객체를 만들어 둔다.
+그래야만 메서드들에서 Optional<T>로 반환할때, 형변환이 일어날 수 있기 때문이다.
+만약 Optional<Object> 이면 형변환이 불가능 했을 것이다.
+```
+### 지네릭 타입끼리의 형변환
+```
+FruitBox<? extends Object> objbox = null;
+FruitBox<? extends String> strbox = null;
+        
+objBox      = (Box<? extends Object>)strbox;     // 가능
+strBox      = (Box<? extends String>)objbox;     // 가능    
+```
++ 와일드 카드의 타입이 확정된 타입이 아니라 컴파일러가 형변환 경고를 알리지만 가능하다.
