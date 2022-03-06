@@ -354,6 +354,10 @@ enum Transportation {
     TRAIN(150)    { int fare(int distance) { return distance*BASIC_FARE;}},
     SHIP(100)     { int fare(int distance) { return distance*BASIC_FARE;}},
     AIRPLANE(300) { int fare(int distance) { return distance*BASIC_FARE;}};
+
+    Transportation(int basicFare) { // private Transportation(int basicFare) {
+        BASIC_FARE = basicFare;
+    }
 (...)
 ```
 + 익명클래스와 같이, 열거형(Transportation)에 정의 된 추상메서드를 각 상수들이 어떻게 구현하는지 보여준다.
