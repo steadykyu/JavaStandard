@@ -249,3 +249,111 @@ objBox      = (Box<? extends Object>)strbox;     // 가능
 strBox      = (Box<? extends String>)objbox;     // 가능    
 ```
 + 와일드 카드의 타입이 확정된 타입이 아니라 컴파일러가 형변환 경고를 알리지만 가능하다.
+
+## 1.8 지네릭 타입의 제거
++ 컴파일러는 지네릭타입을 이용해서 소스파일을 체크하고, **필요한 곳에 형변환**을 넣어준다. 그리고 **지네릭 타입을 제거**한다.
++ 이전 버전과의 호환을 위해 이렇게 이렇게 작업하지만, 추후에는 하위 호환성을 포기하고 원시 타입을 사용하지 않을 지도 모르니 지네릭에 익숙해지자.
+
+# 2.열거형
+ 
+## 2.1 열거형이란
++ 열거형은 서로 관련된 상수를 편리하게 선언하기 위한 것으로, 여러 상수를 정의할 때 사용하면 유용하다.
++ 자바의 열거형은 "타입에 안전한 열거형" 방식이다. 즉 실제 값이 같아도 타입이 다르면 컴파일 에러가 발생한다.
++ 상수의 값이 바뀌면 해당 상수를 참조하는 모든 소스를 다시 컴파일 해야하지만, 열거형 상수를 이용하면 기존의 소스를 다시 컴파일 하지 않아도 된다.
+
+## 2.2 열거형의 정의와 사용
+> 정의
+```
+enum 열거형 이름 { 상수명1, 상수명2, ...}
+```
+> 사용
++ 열거형이름.상수명 으로 사용한다.
++ 열거형 상수간의 비교는 "=="으로 비교가 가능하여, 빠른 성능을 제공한다.
++ 그러나 '<', '>' 같은 비교연산자는 제공하지 않으므로, compareTo() 를 사용해야 한다.(1,0,-1  - 왼쪽이크다, 같다, 오른쪽이크다) 
+
+### 모든 열거형의 조상 - java.lang.Enum
++ 조상의 메서드를 호출할 수 있다.
+```java
+enum Direction { EAST, SOUTH, WEST, NORTH }
+
+class EnumEx1 {
+    public static void main(String[] args) {
+        Direction d1 = Direction.EAST;
+        Direction d2 = Direction.valueOf("WEST");
+        Direction d3 = Enum.valueOf(Direction.class, "EAST");
+
+        System.out.println("d1="+d1);   
+        System.out.println("d2="+d2);
+        System.out.println("d3="+d3);
+
+        System.out.println("d1==d2 ? "+ (d1==d2));
+        System.out.println("d1==d3 ? "+ (d1==d3));
+        System.out.println("d1.equals(d3) ? "+ d1.equals(d3));
+//		System.out.println("d2 > d3 ? "+ (d1 > d3)); // 에러
+        System.out.println("d1.compareTo(d3) ? "+ (d1.compareTo(d3)));
+        System.out.println("d1.compareTo(d2) ? "+ (d1.compareTo(d2)));
+
+        switch(d1) {
+            case EAST: // Direction.EAST라고 쓸 수 없다.
+                System.out.println("The direction is EAST.");
+                break;
+            case SOUTH:
+                System.out.println("The direction is SOUTH.");
+                break;
+            case WEST:
+                System.out.println("The direction is WEST.");
+                break;
+            case NORTH:
+                System.out.println("The direction is NORTH.");
+                break;
+            default:
+                System.out.println("Invalid direction.");
+//				break;
+        }
+
+        Direction[] dArr = Direction.values();
+
+        for(Direction d : dArr)  // for(Direction d : Direction.values())
+            System.out.printf("%s=%d%n", d.name(), d.ordinal());    // 이름과 인덱스값
+    }
+}
+```
+결과
+```
+d1=EAST
+d2=WEST
+d3=EAST
+d1==d2 ? false
+d1==d3 ? true
+d1.equals(d3) ? true
+d1.compareTo(d3) ? 0
+d1.compareTo(d2) ? -2
+The direction is EAST.
+EAST=0
+SOUTH=1
+WEST=2
+NORTH=3
+```
+
+## 2.3 열거형에 멤버 추가하기
++ 열거형이 연속적인 값이라면 ordinal()로 순서를 반환할수 있다.
++ 불연속적인 값이라면 열거형 상수의 이름옆에 ()적고 값을 적어주면 된다.
+```
+enum Direction {
+EAST(1, ">"), SOUTH(2,"V"), WEST(3, "<"), NORTH(4,"^");
+(...)
+}
+```
++ 열거형의 생성자는 제어자가 묵시형으로 private하기 때문에, 열거형 객체를 생성할 수 없다.
++ 코드 참고하기.
+
+### 열거형에 추상메서드 추가하기.
+```java
+enum Transportation {
+    BUS(100)      { int fare(int distance) { return distance*BASIC_FARE;}},
+    TRAIN(150)    { int fare(int distance) { return distance*BASIC_FARE;}},
+    SHIP(100)     { int fare(int distance) { return distance*BASIC_FARE;}},
+    AIRPLANE(300) { int fare(int distance) { return distance*BASIC_FARE;}};
+(...)
+```
++ 익명클래스와 같이, 열거형(Transportation)에 정의 된 추상메서드를 각 상수들이 어떻게 구현하는지 보여준다.
