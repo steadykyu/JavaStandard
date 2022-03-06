@@ -71,3 +71,64 @@ fruitBox.add(new Fruit);
 fruitBox.add(new Apple);    // 가능! ( 'Fruit fruit = Apple 인스턴스' 이므로)
 fruitBox.add(new Fruit2);   // 불가능(Fruit이 와야함)
 ```
+    
+## 1.4 제한된 지네릭 클래스
++ 한 종류의 타입이 오도록 제한하기는 했지만, 이 타입에는 모든 종류의 타입 사용이 가능하다. 이를 제한해보자
+```
+class FruitBox<T extends Fruit>{
+    ArrayList<T> list = new ArrayList<T>();
+    
+    }
+============================================
+FruitBox<Apple> appleBox = new FruitBox<Apple>();   // OK    
+FruitBox<Toy> appleBox = new FruitBox<Toy>();       // 에러 발생    
+```
++ FruitBox는 한종류(T)의 타입만 오도록 설정했지만, 이제는 T 에는 Fruit의 자식 클래스들만 올수 있게 설정하였다.
++ 매개변수화된 타입도 이제 다형성이 가능해 진것이다.
+```
+interface Eatable {}
+class FruitBox<T extends Eatable> {...}
+=============================================================
+class FruitBox<T extends Fruit & Eatable> {...}
+```
++ 인터페이스를 구현해야한하는 클래스가 오돍 제약이 필요하다면, 이때 implements가 아닌 **extends**를 사용한다.
++ 자손이면서 동시에 구현 한다면 "&" 기호를 사용한다.
+    
+## 1.5 와일드 카드
+```java
+static Juice makeJuice(FruitBox<Fruit> box) {       // Fruit
+        String tmp = "";
+
+        for(Fruit f : box.getList())
+            tmp += f + " ";
+        return new Juice(tmp);
+    }
+ ============================================================
+static Juice makeJuice(FruitBox<Apple> box) {       // Apple
+        String tmp = "";
+
+        for(Fruit f : box.getList())
+            tmp += f + " ";
+        return new Juice(tmp);
+    }
+```    
++ 지네릭 타입이 다른 것만으로는 사실 들어가는 타입변수만 다른 것이지 같은 클래스이므로, **오버로딩이 성립하지 않는다.**
++ 그래서 와일드카드가 고안되었다.
+```
+<? extends T> : 와일드 카드의 상한 제한. T와 그 자손들만 가능
+<? super T>   : 와일드 카드의 하한제한. T와 그 조상들만 가능
+<?>           : 제한없음. 모든 타입이 가능함. <? extends Object>와 동일
+```
+> 와일드 카드 사용
+```java
+static Juice makeJuice(FruitBox<? extends Fruit> box) {
+        String tmp = "";
+
+        for(Fruit f : box.getList())
+            tmp += f + " ";
+        return new Juice(tmp);
+    }
+```
++ ( Apple extends Fruit , Grape extends Fruit)
++ Fruit과 그 자손인 Apple, Grape 클래스들이 들어올 수 있게 된다.
++ 이부분은 코드를 꼭 참고해서 봐도록 하자.
