@@ -1,4 +1,4 @@
-package ch12_Generic_enum_annotation;
+package ch12_Generic_enum_annotation.ch12_1;
 
 import java.util.ArrayList;
 
