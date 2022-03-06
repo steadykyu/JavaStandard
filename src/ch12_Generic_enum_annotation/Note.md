@@ -361,3 +361,87 @@ enum Transportation {
 (...)
 ```
 + 익명클래스와 같이, 열거형(Transportation)에 정의 된 추상메서드를 각 상수들이 어떻게 구현하는지 보여준다.
+
+## 2.4 열거형의 이해
+```
+enum Direction { EAST, SOUTH, WEST, NORTH }
+==================================================
+class Direction{
+    static final Direction EAST = new Direction("EAST");
+       ....
+}
+```
++ 사실 열거형 상수 하나하나가 Direction 객체이다.
++ 그러므로 "==" 비교가 가능한 것이다.
+```java
+abstract class MyEnum<T extends MyEnum<T>> implements Comparable<T> {
+    static int id = 0;
+
+    int ordinal;
+    String name = "";
+
+    public int ordinal() { return ordinal; }
+
+    MyEnum(String name) {
+        this.name = name;
+        ordinal = id++;
+    }
+```
++ 모든 열거형들은 Enum 추상클래스를 상속받으며, 위 코드는 최대한 비슷하게 만든 것이다.
++ 객체가 생성될 때마다 번호를 붙여서 인스턴스 변수 ordinal에 저장한다.(그래서 인덱스 값으로 ordinal이 쓰임)
+
+```java
+class Direction{
+    static final Direction EAST = new Direction("EAST"){ //익명클래스, 메서드 구현
+    Point move(Point p) { .... } 
+    };
+      (....)
+
+    abstract Point move(Point p);
+}
+```
++ 열거형에 추상메서드를 추가하면 각 열거형 상수가 추상 메서드를 구현해야하는지 이해하기 위한 코드이다.
+
+# 3. 애너테이션
+## 3.1 애너테이션이란
++ 프로그램의 소스코드 안에 다른 프로그램을 위한 정보를 미리 약속된 형식으로 포함시킨 것
++ 기본적으로 JDK에서 제공하는 것과 다른 프로그램에서 제공하는 것들이 있는데, 그저 약속된 형식으로 정보를 제공하기만 하면 될 뿐이다.
+
+## 3.2 표준 애너테이션
++ 몇개의 기본 애너테이션과 메타 애너테이션이 존재한다.
++ 메타 애너테이션은 에너테이션을 정의하는데 사용되는 애너테이션의 애너테이션이다.
++ 먼저 기본만 봐보자.
+### @Override
++ 메서드앞에만 붙이는 애너테이션으로, 조상의 메서드를 오버라이딩하는것이라는걸 **컴파일러**에게 알려주는 역할을 한다.
++ 만약  @Override가 붙은 메서드를 오버라이딩 하지않으면 오류를 발생시켜, 실수를 방지시켜준다.
+
+### @Deprecated
++ 더이상 사용되지 않는 필드나 메서드에 @Deprecated붙여, 다른 것으로 대체되었으니 더이상 사용하지 않을 것을 권한다는 메세지를 우리에게 전한다.
+
+### @Functionallnterface
++ 컴파일러가 함수형 인터페이스를 올바르게 선언했는지 확인하고, 잘못된 경우 에러를 발생시킨다.
+
+### @SuppressWarnings
++ 일반적으로는 컴파일러의 경고메세지를 모두 확인하고 해결하고 넘어갔다.
++ 그러나 여러 에러나 경고가 뜬다면, 더 중요한 경고나 에러 확인을 위하여 어떠한 경고들은 묵인해야 할때가 있을 것이다.
++ 그럴때 경고가 발생하는 곳에  @SuppressWarnings를 사용하여 경고를 억제시킨다.
+```
+deprecation : @Deprecated 가 붙을 대상을 사용해서 발생하는 경고
+unchecked   : 지네릭스로 타입을 지정하지 않았을때 발생하는 경고 
+rawtypes    : 지네릭스를 사용하지 않아서 발생하는 경고 
+varargs     : 가변인자의 타입이 지네릭 타입일 때 발생하는 경고
+========================================================
+사용방식
+1. @SuppressWarnings({"deprecation","unchecked"...})  // 메서드 위에 사용하여, 메서드 안의 옵션경고들을 전부 억제시킨다.
+2. @SuppressWarnings("deprecation")                   // 해당 경고가 발생하는 소스코드위에 사용한다.
+```
++ 1번방식은 나중에 추가된 코드에서 발생할 수 있는 경고까지 억제하므로, 귀찮더라도 2번방법으로 하는게 좋다.
++ 코드를 참고하자
+
+### @SafeVarargs
++ 메서드에 선언된 가변인자의 타입이 non-reifiable타입일 경우, 해당 메서드를 선언하는 부분과 호출하는 부분에서 uncheked 경고가 발생한다.
++ static이나 final 이 붙은 메서드와 생성자에만 붙일수 있다.(=오버라이드 될수 있는 메서드에는 사용불가)
++ non-reifiable : 컴파일 후에도 제거 되는 타입( ex) 지네릭스 )
++ @SafeVarargs으로 "unchecked" 경고는 억제할 수 있으나 "varargs" 경로는 억제할수 없다.
++ 그러므로 @SuppressWarnings("varargs") 와 같이 사용하는 편이 좋다.
++ 코드를 참고하자
