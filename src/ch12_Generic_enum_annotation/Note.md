@@ -445,3 +445,134 @@ varargs     : 가변인자의 타입이 지네릭 타입일 때 발생하는 경
 + @SafeVarargs으로 "unchecked" 경고는 억제할 수 있으나 "varargs" 경로는 억제할수 없다.
 + 그러므로 @SuppressWarnings("varargs") 와 같이 사용하는 편이 좋다.
 + 코드를 참고하자
+
+## 3.3 메타 애너테이션
++ 에너테이션에 붙이는 에너테이션으로 에너테이션을 정의할 때 에너테이션의 적용대상(target)이나 유지기간(retention)등을 지정하는데 사용한다.
+
+### Target
++ 에너테이션이 적용가능한 대상을 지정하는데 사용한다.
++ 대상 타입은 책 or API 참고
+```
+import static java.lang.annotation.ElementType.*;       // ElementType.TYPE 대신 TYPE 쓸수 있도록 하기위해 선언
+
+@Target({FIELD, TYPE, TYPE_USE})
+public @interface MyAnnotation {}                       // @interface : 애너테이션 생성, 정의하기
+
+@MyAnnotation                                           // 적용대상이 TYPE
+class MyClass{
+    @MyAnnotation                                       // FIELD 는 기본형에
+    int i;
+    
+    @MyAnnotation                                       // TYPE_USE 는 참조형에
+    MyClass mc;
+```
+
+### @Retention
++ 애너테이션이 유지되는 기간을 지정하는데 사용된다.
+```
+SOURCE  : 소스파일에만 존재. 클래스파일에는 존재 X
+CLASS   : 클래스파일에 존재. 실행시에 사용불가. 기본값
+RUNTIME : 클래스파일에 존재. 실행시에 사용가능
+```
+### @Documented
++ 애너테이션에 대한 정보가 javadoc으로 작성한 문서에 포함되도록한다.
+
+### @Inherited
++ 애너테이션이 자손클래스에 상속되도록한다.
+```
+@Inherited                          // @SupperAnno가 자손까치 영향을 미치도록
+@interface SupperAnno{}     
+
+@SupperAnno
+class Parent{}
+
+class Child extends Parent{}        // Child에 애너테이션이 붙은것으로 인식
+```
+
+### @Repeatable
++ 보통 하나의 대상에 한종류의 애너테이션을 붙이는데, @Repeatable 이 붙은 애너테이션은 여러벝 붙일 수 있다.
+```
+
+@interface ToDos{
+    ToDo[] value
+}
+@Repeatable(ToDos.class)
+@interface ToDo{
+        String value();
+}
+==========================
+@ToDo("delete test codes")
+@ToDo("override inherited methods")     // 중복해서 사용
+class MyClass{
+    ...
+}
+```
+
+### @Native
++ 네이티브 메서드에 의해 참조되는 상수필드에 붙이는 애너테이션이다.
+```
+@Native public static final long Min_VALUE = 0x800000000L;
+```
++ 네이티브 메서드는 JVM이 설치된 OS의 메서드를 말한다.
++ Object의 메서드들이 대부분 native 메서드로 존재하는데, OS의 메서드와 연결하여 작동한다.(JNI에 의해)
+
+## 3.4 애너테이션 타입 정의하기
+```
+@interface 애너테이션이름{
+        타입 요소이름();  // 애너테이션의 요소를 선언한다.
+        ...
+}
+```
+### 애너테이션의 요소
+> 특징
+```
+- 요소의 타입은 기본형, String, enum, 애너테이션, Class만 허용된다.
+- ()안에 매개변수를 선언할 수 없다.(매개변수가 없는 추상메서드)
+- 예외를 선언할 수 없다.(XX "throw Exception")
+- 요소를 타입 매개변수로 정의할 수 없다. (ex) ArrayList<T> 불가능)
+```
++ 적용할때 요소들의 값을 빠짐없이 지정해야한다.
++ 기본값이 있는 요소를 만들수 있다.
+```
+@interface TestInfo{
+        int count() default 1;
+}
+
+@TestInfo
+public class NewClass{...}
+```
++ 요소(안쪽 추상메서드)의 이름이 value()이면 호출시 이름을 생략해도 된다.
+```
+@interface TestInfo{
+        String value();
+}
+
+@TestInfo("passed")
+public class NewClass{...}
+```
++ 요소 타입이 배열인 경우 {}를 사용하여 여러개의 값을 지정한다.
+```
+@interface TestInfo{
+        String[] tools();
+}
+
+@TestInfo(toos = {"JUNIT", "AutoTester"})
+public class NewClass{...}
+```
++ 코드참고하기!(12-13)
+
+### java.lang.annotation.Annotation
++ 모든 애너테이션의 조상은 Annotation이다. 그러나 애너테이션은 상속이 허용되지 않으므로 명식적으로 Annotation을 조상으로 지정할 수 없다.
++ Annotation은 인터페이스로, equals() , hashCode(), toString() 메서드가 존재한다. 그러므로 호출도 가능하다.
+
+### 마커 애너테이션 Marker Annotation
++ 값을 지정할 필요가 없는 경우, 애너테이션의 요소를 하나도 정의하지 않을수 있다.
+```
+public @interface Override{} // 마커애너테이션 . 정의된 요소가 하나도 없다.
+```
++ 참고
+```
+클래스 객체 : 클래스파일 - 클래스 로더에 의해 메모리에 올라갈때 만들어지는 클래스에 대한 정보가 담긴 객체
+- "클래스이름.class" 형식을 사용한다.
+- 해당클래스에 대한 모든 정보를 가지고있는데, 애너테이션 정보도 포함되어 있다.
+```
