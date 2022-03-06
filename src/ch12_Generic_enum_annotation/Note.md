@@ -66,6 +66,7 @@ Box<Apple> appleBox = new Box<>();
 > Fruit 과 Apple(자식)은 상속관계
 ```
 Box<Fruit> fruitBox = new Box<Fruit>(); 
+(void add(Fruit fruit){...})  //
 fruitBox.add(new Fruit);
 fruitBox.add(new Apple);    // 가능! ( 'Fruit fruit = Apple 인스턴스' 이므로)
 fruitBox.add(new Fruit2);   // 불가능(Fruit이 와야함)
