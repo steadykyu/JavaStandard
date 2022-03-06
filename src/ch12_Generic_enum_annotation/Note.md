@@ -154,4 +154,4 @@ public static void main(String[] args) {
 ```
 + ( Apple extends Fruit , Grape extends Fruit)
 + Fruit과 그 자손인 Apple, Grape 클래스들이 들어올 수 있게 된다.
-+ 이부분은 코드를 꼭 참고해서 봐도록 하자.
++ 이부분은 코드를 꼭 참고해서 봐도록 하자.( 추가내용 : Comparator<? super T> )
