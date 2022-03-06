@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class EX11_14 {
-    static ArrayList record = new ArrayList(); // 성적데이터를 저장할 공간
-    static Scanner s = new Scanner(System.in);
+    static ArrayList record = new ArrayList(); // 성적데이터를 저장할 공간 static으로 선언
+    static Scanner s = new Scanner(System.in);  // 어디서든 사용할 수 있도록 static으로 선언
 
     public static void main(String[] args) {
         while (true){
@@ -32,14 +32,14 @@ public class EX11_14 {
         System.out.println(" 2.학생성적 보기 ");
         System.out.println();
         System.out.println(" 3.프로그램 종료 ");
-        System.out.print(" .(1~3) : ; 원하는 메뉴를 선택하세요");
+        System.out.print(" .(1~3) : 원하는 메뉴를 선택하세요 ");
         int menu = 0;
 
         do{
             try {
                 menu = Integer.parseInt(s.nextLine().trim());
                 if(1 <= menu && menu <= 3) {
-                    break;
+                    break;                          // 메뉴가 1~3이면 그냥 지나간후 menu를 return해라.
             } else {
                     throw new Exception();
                 }
@@ -55,17 +55,18 @@ public class EX11_14 {
     // 데이터를 입력받는 메서드
     static void inputRecord() {
         System.out.println("1.학생성적 입력하기 ");
-        System.out.println("이름,반,번호,국어성적,영어성적,수학성적의 순서로 공백없이 입력하세요.");
+        System.out.println("이름, 반, 번호, 국어성적, 영어성적, 수학성적의 순서로 공백없이 입력하세요.");
         System.out.println("입력을 마치려면 q를 입력하세요. 메인화면 으로 돌아갑니다.");
 
         while(true) {
             System.out.print(">>");
             try {
                 String input = s.nextLine().trim();
+
                 if(!input.equalsIgnoreCase("q")) {
                     // Scanner를 이용해서 화면으로 부터 데이터를 입력받는다.(',' 구분자로)
-
-                    Scanner s2 = new Scanner(input).useDelimiter(",");
+                    // 공백이 있으면 인식을 못함
+                    Scanner s2 = new Scanner(input.replace(" ", "")).useDelimiter(",");
 
                     // 입력받은 값으로 Student인스턴스를 생성하고 record에 추가한다.
                     record.add(new Student(s2.next(), s2.nextInt(), s2.nextInt(),
@@ -88,6 +89,7 @@ public class EX11_14 {
         int mathTotal = 0;
         int total = 0;
         int length = record.size();
+
         if(length > 0) {
             System.out.println();
             System.out.println("이름 반 번호 국어 영어 수학 총점 평균 전교등수 반등수");
