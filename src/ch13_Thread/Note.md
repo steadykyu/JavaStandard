@@ -145,16 +145,18 @@ Thread(ThreadGroup group, String name)                      // group에 name 이
 Thread(ThreadGroup group, Runnable target)                  //
 Thread(ThreadGroup group, String name, Runnable target)
 Thread(ThreadGroup group, String name, Runnable target, long stacksize)
-===========================================
-Thread의 ThreadGroup과 관련된 메서드
-ThreadGroup getThreadGroup()                                // 자신이 속한 쓰레드 그룹을 반환한다.
-void uncaughtException(Thread t, Throwable e)              
-// 쓰레드 그룹의 쓰레드가 처리되지 않은 예외에 의해 실행이 종료되었을때, Jvm에 의해 이 메서드가 자동적으로 호출된다.
 ```
 + 모든 쓰레드는 반드시 쓰레드 그룹에 포함되어야한다.
 + 쓰레드 그룹을 지정하는 생성하지를 사용하지 않은 쓰레드는 **기본적으로** **자신을 생성한 쓰레드와 같은 쓰레드 그룹**에 속하게 된다.
 + 그러므로 우리가 생성하는 모든 쓰레드 그룹은 main쓰레드 그룹의 하위 쓰레드 그룹이된다.
 + 또한 쓰레드그룹을 지정하지 않고 생성한 쓰레드는 **자동적으로** main쓰레드 그룹에 속하게 된다.
-+ 생성자와 메서드는 책을 참고하자!
+
+> ThreadGroup과 관련된 Thread 메서드
+```
+ThreadGroup getThreadGroup()                                // 자신이 속한 쓰레드 그룹을 반환한다.
+void uncaughtException(Thread t, Throwable e)              
+// 쓰레드 그룹의 쓰레드가 처리되지 않은 예외에 의해 실행이 종료되었을때, Jvm에 의해 이 메서드가 자동적으로 호출된다.
+```
++ ThreadGroup 생성자와 메서드는 책을 참고하자
 + 코드결과를 확인해보자!
 
