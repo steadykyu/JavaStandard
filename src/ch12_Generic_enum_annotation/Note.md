@@ -121,13 +121,36 @@ static Juice makeJuice(FruitBox<Apple> box) {       // Apple
 ```
 > 와일드 카드 사용
 ```java
-static Juice makeJuice(FruitBox<? extends Fruit> box) {
+// 출력용
+class Juice {
+    String name;
+
+    Juice(String name)	     { this.name = name + "Juice"; }
+    public String toString() { return name;		 }
+}
+// 와일드 카드 적용
+class Juicer {
+    static Juice makeJuice(FruitBox<? extends Fruit> box) {
         String tmp = "";
 
-        for(Fruit f : box.getList())
+        for(Fruit f : box.getList())            // appleBox가 오더라도 어차피 Apple은 Fruit의 자손이므로 문제 X
             tmp += f + " ";
         return new Juice(tmp);
     }
+}
+=========================================================
+public static void main(String[] args) {
+        FruitBox<Fruit> fruitBox = new FruitBox<Fruit>();       // Fruit으로 제한시켜놓은 FruitBox 클래스가 생성
+        FruitBox<Apple> appleBox = new FruitBox<Apple>();       // Apple로 제한 시켜놓은 FruitBox 클래스가 생성
+
+        fruitBox.add(new Apple());
+        fruitBox.add(new Grape());
+        appleBox.add(new Apple());
+        appleBox.add(new Apple());
+
+        System.out.println(Juicer.makeJuice(fruitBox));
+        System.out.println(Juicer.makeJuice(appleBox));           // 와일드 카드덕분에 Apple Type Variable임에도 메서드 사용가능 
+    } 
 ```
 + ( Apple extends Fruit , Grape extends Fruit)
 + Fruit과 그 자손인 Apple, Grape 클래스들이 들어올 수 있게 된다.
