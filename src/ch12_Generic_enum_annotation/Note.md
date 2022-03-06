@@ -248,4 +248,4 @@ FruitBox<? extends String> strbox = null;
 objBox      = (Box<? extends Object>)strbox;     // 가능
 strBox      = (Box<? extends String>)objbox;     // 가능    
 ```
-    + 와일드 카드의 타입이 확정된 타입이 아니라 컴파일러가 형변환 경고를 알리지만 가능하다.
++ 와일드 카드의 타입이 확정된 타입이 아니라 컴파일러가 형변환 경고를 알리지만 가능하다.
