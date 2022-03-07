@@ -282,4 +282,126 @@ wait(), notify(), notifyAll()
 ***
 + 결국 락은 경쟁을 통해 하나의 쓰레드만 얻을수 있는데 이를 **경쟁 상태(race condition)** 라고한다.
 
-## 9.3 
+## 9.3 Lock과 Condition을 이용한 동기화
++ 동기화하는 방식에는 synchronized 뿐만아니라 java.util.concurrent.locks 패키지가 제공하는 lock클래스들이 있다.
++ lock 패키지는 lock과 unlock을 내가 따로 정해줄 수 있으며 아래 3종류의 lock클래스를 지닌다.
+```
+ReentrantLock               : 재진입이 가능한 lock (우리가 지금까지 해온 lock과 일치)
+ReentrantReadWriteLock      : 읽기에는 공유적이고, 쓰기에는 배타적인 lock
+StampedLock                 : ReentrantReadWriteLock에 낙관적인 lock의 기능을 추가
+```
++ ReentrantReadWriteLock은 읽기lock이 걸린 상태에서는 쓰기lock을 걸수 없고, 반대도 마찬가지 이다.
++ StampedLock은 무조건 읽기 lock을 걸지 않고, 쓰기와 읽기가 충돌했을때 쓰기가 끝난 후에 읽기 lock을 거는 것이다.
+
+> ReentrantLock 생성자
+```
+ReentrantLock()
+ReentrantLock(boolean fair)
+```
++ 생성자 매개변수가 true이면, lock이 풀렸을때 가장 오래 기다린 쓰레드가 lock을 획득하도록 공정하게 처리한다.
++ 그런데 성능이 떨어지므로, 굳이 사용하지는 않는다.
+
+> 관련 메서드
+```
+void lock()             : lock을 잠근다.
+void unlock()           : lock을 해지한다.
+boolean isLocked()      : lock이 잠겼는지 확인한다.
+```
++ unlock()은 임계영역내에서 예외가 발생하거나 return문에 의해 실행되지 않을수 있기때문에, finally문으로 감싸 무조건 실행되게 한다.
+
+> tryLock() 메서드
+```
+boolean tryLock()
+boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException
+```
++ lock은 lock을 얻을때까지 쓰레드를 block 시키므로 쓰레드 응답성이 나빠진다.
++ 응답성이 더 중요하다고 판단 될때, tryLock()을 이용하면 지정된 시간동안 lock을 얻지 못했을때, 다시 작업을 시도할 것인지 포기할 것인지 결정할수 있게 도와준다.
++ lock을 기다리는 과정중에 interrupt에 의해 작업이 취소되면 InterruptedException를 발생시키도록 할 수 있다.
+
+### ReentrantLock 과 Condition
++ 이전의 wait(), notify()에서 waiting pool에 여러 쓰레드(ex) Cook, customer)가 존재할때, 기아현상이나 경쟁상태가 발생하는 문제들이 있었다.
++ 이를 개선하기 위해 Condition 클래스의 await()와 signal(), signalAll() 메서드를 사용하면 각각의(Cook, customer 전용) waiting pool에서 기다리게 하고 통지할 수 있다.
+```
+private ReentrantLock lock = new ReentrantLock(); // lock 을 생성
+//lock로 condition을 생성
+private Condition forCook = lock.newCondition();
+private Condition forCust = lock.newCondition();        // 특정 waiting pool 즉 Condition 생성
+===================================================
+forCook.await()  //Cook 쓰레드를 기다리게함
+...
+forCook.signal() // 기다리고 있는 Cook쓰레드를 통지하여 깨움
+```
++ 이제 쓰레드의 종류에 따라 구분하여 통지를 함으로써 기아 현상이나 경쟁 상태를 개선할 수 있다.
++ 그러나 여전히 특정 쓰레드를 선택할 수는 없기때문에(통지 하는것뿐 락을 얻는 것은 하나이므로), 기아 현상이나 경쟁 상태가 벌어질 발생할 가능성은 남아있다.
+
+## 9.4 volatile
++ 일반적으로 코어는 캐시에서 값을 읽어오는데 메모리에서 값을 수정한 경우 캐시에는 갱신이 되지 않아서 문제가 발생할 수 있다.
++ 그러므로 멀티 코어프로세서에서 volatile으로 변수를 선언하면, 코어가 변수의 값을 읽어올때 캐시가 아닌 메모리에서 읽어오도록한다.
+
+### volatile로 long과 double을 원자화
++ JVM은 4byte단위로 처리하기때문에 int보다 작거나 같은 타입들은 한번에 읽거나 쓰는 것이 가능하다.
++ 그러나 long과 double 타입의 변수는 하나의 명령어로 읽거나 쓰지 않기때문에, 다른 쓰레드가 끼어들 여지가 있다.
++ 이때 변수를 사용하는 모든 문장에 synchronized를 붙여서 처리할 수도 있지만, 변수에 volatile를 붙여 원자화 시킬수 있다.
++ 원자화란 작업을 더이상 나눌수 없다는 의미이다.
++ 원자화 했다고 해서 동기화하지 않아도 되는 것은 아니다.(동기화한 문장에 변수가 포함되면 원자화 해줄 필요는 없지만)
+```
+volatile long   sharedVal;
+volatile double sharedVal;
+```
+## 9.5 fork & join 프레임 워크
++ 이제는 CPU속도를 자체적으로 올리기보다는, 코어의 개수를 늘려서 CPU의 성능을 향상시키는 방향으로 CPU 시장이 발전하고 있다.
++ 그러므로 멀티코어를 활용하는 멀티쓰레드 프로그래밍이 중요해지고 있다.
++ fork & join 프레임 워크는 하나의 작업을 작은 단위로 나워서 여러 쓰레드가 동시에 처리하는 것을 쉽게 만들어 준다.
+> 아래 두 클래스중 하나를 상속받아 구현
+```
+RecursiveAction : 반환값이 없는 작업을 구현할때 사용
+RecursiveTask   : 반환값이 있는 작업을 구현할때 사용
+```
++ 위의 두 클래스에는 compute()라는 추상 메서드를 가지고 있으므로, 이 메서드를 구현하면 작업을 할 수 있다.
++ 이 다음에는 쓰레드풀과 수행할 작업을 생성하고 invoke()로 작업을 시작한다.
+```
+ForkJoinPool pool = new ForkJoinPool();     // 쓰레드 풀을 생성
+SumTask task = new SumTask(from, to);       // 수행할 작업을 생성
+
+Long result = pool.invoke(task);            // invoke()를 호출해서 작업을 시작
+```
+### compute()의 구현
++ 책의 그림 참고하기.
+> 책에 있는 예시의 compute() 구현
+```
+public Long compute() {
+        long size = to - from;
+
+        if(size <= 5)     // 더할 숫자가 5개 이하면
+            return sum(); // 숫자의 합을 반환
+
+        long half = (from+to)/2;
+
+        // 범위를 반으로 나눠서 두 개의 작업을 생성
+        SumTask leftSum  = new SumTask(from, half);
+        SumTask rightSum = new SumTask(half+1, to);
+
+        leftSum.fork();
+
+        return rightSum.compute() + leftSum.join();
+    }
+```
++ 지정된 범위를 절반으로 나누어서 나눠진 범위의 합을 계산하기 위한 SumTask를 생성한다.
++ 이 과정은 작업이 더이상 나눠질수 없을때 까지,size 범위값이 5보다 작거나 같을때까지 compute작업을 수행한다.
+
+### fork()와 join()
+```
+fork()  : 해당 작업을 쓰레드 풀의 작업 큐에 넣는다. 비동기메서드
+join()  : 해당 작업의 수행이 끝날때까지 기다렸다가, 수행이 끝나면 그 결과를 반환한다. 동기메서드
+```
++ return문에서 compute()가 재귀호출될 때, join은 호출되지 않는다. 그러다 작업을 더이상 나눌수 없게 되었을때,
++ compute 재귀호출은 끝나고 join() 결과를 기다렸다가 더해서 결과를 반환한다.
+
+### 다른 쓰레드의 작업 훔쳐오기
++ fork()가 호출되어 작업큐에 추가된 작업 역시, compute()에 의해 더이상 나눌 수 없을때까지 반복해서 나뉜다.
++ 그리고 자신의 작업큐가 비어있는 쓰레드는 다른 쓰레드의 작업큐에서 작업을 가져와서 수행한다.
++ 이를 작업훔쳐오기(work stealing) 이라고 부르며, 이 과정은 쓰레드풀에 의해 자동적으로 이루어진다.
+
+## 결과
++ 작업을 나누고 다시 합치는데 걸리는 시간이 있기때문에, 싱글쓰레드보다 시간이 더 걸릴 수도 있다.
++ 즉 테스트해보고 이득이 있을때만 멀티쓰레드로 처리하자.
