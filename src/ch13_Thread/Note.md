@@ -160,3 +160,79 @@ void uncaughtException(Thread t, Throwable e)
 + ThreadGroup 생성자와 메서드는 책을 참고하자
 + 코드결과를 확인해보자!
 
+# 7. 데몬 쓰레드
++ 데몬쓰레드는 다른 일반 쓰레드(데몬이 아닌쓰레드)의 작업을 돕는 보조적인 역할을 수행하는 쓰레드이다.
++ 일반 쓰레드가 종료되면 데몬쓰레드는 강제적으로 자동종료된다.(존재의미가 없기떄문)
++ 예로는 가비지컬렉터, 워드프로세서 자동저장, 화면자동갱신등이 있다.
+```
+boolean isDaemon()              : 쓰레드가 데몬쓰레드 인지 확인한다.
+void setDaemon(boolean on)      : 쓰레드를 데몬 쓰레드로 또는 사용자 쓰레드로 변경한다.
+```
++ setDaemon 메서드는 반드시 start() - (쓰레드 생성및 실행) 를 호출하기 전에 실행되어야 한다.
++ 참고 : getAllStackTrace() 를 활용하면 실행 중 또는 대기상태인, 작업이 완료되지 않은 모든 쓰레드의 호출스택을 출력할 수 있다.(데몬쓰레드포함)
++ 코드 참고하자
+
+# 8. 쓰레드의 실행제어
++ 쓰레드 프로그래밍이 어려운 이유는 동기화와 스케줄링때문이다.
++ 효율적인 멀티쓰레드 프로그램을 만들기 위해서는 보다 정교한 스케줄링을 통해 프로세스에게 주어진 자원과 시간을 여러 쓰레드가 낭비없이 잘 사용하도록 프로그래밍 해야한다.
+> 쓰레드의 스케줄링 관련 메서드
+```
+sleep()
+join()
+interrupt()
+stop()
+suspend()
+resume()
+yield()
+```
++ 자세한 내용은 책이나 공식문서를 참고하자
++ resume(), stop(), suspend()는 교착상태로 만들기 쉬워 deprecated 되었다.
+
+> 쓰레드의 상태
+```
+NEW
+RUNNABLE
+BLOCKED
+WAITING, TIME_WAITING
+TERMINATED
+```
+### sleep(long millis, int nanos)
++ 일정 시간동안 쓰레드를 멈추게 하여 일시정지 상태가 되게 만든다.
++ Thread.sleep(millis)  형태로 사용하며 1000분의 1초단위이다.
++ sleep()에 의해 일시정지 상태가 된 쓰레드는 지정된 시간이 다 되거나 interrupt()가 호출되면(InterruptedException 발생) , 잠에서 깨어나 실행대기 상태가 된다.
++ 예외가 발생할수 있으므로 try-catch문으로 처리해 주어야한다.
++ sleep()은 항상 현재 실행중인 쓰레드에 대해 작동한다. 그래서 main메서드에서 실행시에는 다른 쓰레드의 참조변수로(ex- th.sleep())을 수행하더라도 main쓰레드에 영향을 준다.
++ 그러므로 static으로 선언되어 있으며 참조변수를 이용해서 호출하기 보다는 Thread.sleep(); 로 해야한다.
+
+### interrupt()와 interrupted()
++ 쓰레드에게 작업을 멈추라고 요청한다.
++ 단지 멈추라고 요청하는 것뿐 종료시키지는 못한다.
++ 인스턴스 변수인 interrupted()의 상태를 바꾼다.(interrupt 호출시 - true, 호출되지않았을시 - false)
+```
+void interrupt()                    : 현재 쓰레드의 interrupted 상태를 true로 변경
+boolean siInterrupted()             : 현재 쓰레드의 interrupted 상태를 반환
+static boolean interrupted()        : 현재 쓰레드의 interrupted 반환후, false로 변경
+```
++ 만약 일시정시 상태(sleep,wait,join)에 있을때 interrupt를 호출하면 InterruptedException이 발생하고 쓰레드를 실행대기 상태(RUNNABLE)로 만든다.
+
+### suspend(), resume(), stop()
++ suspend()는 sleep() 처럼 쓰레드를 멈추게한다.
++ resume()은 suspend()에 의해 정지된 쓰레드를 다시 실행대기상태로 만든다.
++ stop은 호출되는 즉시 쓰레드가 종료된다.
++ 교착상태를 일으킨다는 이유로 셋다 deprecated 되었다.
+
+### yield
++ 쓰레드 자신에게 주어진 실행시간을 다음 차례의 쓰레드에게 양보한다.
++ yield와 interrupt를 적절히 사용하면, 프로그램의 응답성을 높이고 보다 효율적인 실행이 가능하게 할 수있다.
+
+### join()
++ 실행중이던 쓰레드 자신이 하던 작업을 잠시멈추고 다른 쓰레드가 지정된 시간동안 작업을 수행하도록 만들어 준다.
+```
+void join()
+void join(long millis)
+void join(long millis, int nanos)
+```
++ 시간을 지정하지않으면, 해당 스레드가 작업을 모두 마칠때까지 기다리게 한다.
++ interrupt() 에 의해서 일시정지상태에서 벗어 날수 있으며, 이때 예외가 발생하므로 try-catch문으로 감싸야한다.
++ sleep과 유사한 점이 많은데, 다른점은 join()은 현재 쓰레드가 아닌 특정 쓰레드에 동작하므로 static메서드가 아니라는 것이다.
++ sleep처럼 Thread.sleep() , this.sleep()형태가 아니라, th1.join() - (th1 쓰레드가 동작하는것을 마칠때까지 기다려라) 가 된다. 
