@@ -773,6 +773,7 @@ Optional<T> reduce(BinaryOperator<T> accumulator)
 T reduce (T identitiy, BinaryOperator<T> accumulator)
 U reduce (U identitiy, BiFunction<U,T,U> accumulator, BinaryOperator<T> combiner) // 처리된 결과를 합치는 combiner
 ```
++ BinaryOperator\<T\>는 BiFunction의 자손이며, BiFunction\<T,T,T\>와 동등하다.
 + 반환타입으로 Optional\<T\> 를 가진다. 추가로 초기값을 가지는 reduce()는 T를 반환타입으로 가진다.
 + 기본형 스트림에서 reduce()를 사용하면 반환타입으로 OptionalInt를 가진다.
 + reduce()는 초기값과 어떤 연산으로 스트림의 요소를 줄여나갈지만 잘 판단하면 된다.
@@ -1189,3 +1190,36 @@ Map<Integer, HashSet<Student>> stuByHak = stuStream
                                           .collect(groupingBy(Student::getHak, toCollection(HashSet::new)));
 ```
 + collectingAndThen()을 통해 반환타입을 수정해줄 수 있다.
+
+## 2.7 Collector 구현하기
++ 지금까지는 Collectors 클래스가 제공하는 컬렉터를 사용해왔지만, 이제는 우리가 컬렉터를 작성해보자.
++ Collector 인터페이스를 구현하여 컬렉터를 작성할 수 있다.
+```
+public interface Collector<T, A, R> {
+	Supplier<A>		supplier();
+	BiConsumer<A, T>	accumulator();
+	BinaryOperator<A>	combiner();
+	Function<A, R>		finisher();
+	
+	Set<Characteristics>	characteristics(); // 컬렉터의 특성이 담긴 Set을 반환
+	...
+}
+```
++ supplier() 	: 작업결과를 저장할 공간을 제공
++ accumulator() : 스트림의 요소를 수집할 방법을 제공하고 supplier에 누적한다.
++ combiner()	: 두 저장공간을 병합할 방법을 제공(병렬 스트림)
++ finisher()	: 결과를 최종적으로 변환할 방법을 제공 ( 그대로 변환 : Function.identity();로 항승 함수를 반환한다.)
+
+> characteristics()는 컬렉터가 수행하는 작업의 속성에 대한 정보 제공
+```
+Characteristics.CONCURRENT	: 병렬로 처리할 수 있는 작업
+Characteristics.UNORDERED	: 스트림의 요소가 순서가 유지될 필요가 없는 작업
+Characteristics.IDENTITY_FINISH	: finish()가 항등함수인 작업
+Characteristics.emptySet();	: 지정할 특성이 없는 경우
+```
++ 내부적으로 앞의 reduce()에 나온 연산식들로, Collector도 내부적으로 처리하는 과정이 리듀싱과 같다.
++ 그룹화와 분할, 집계등에 유용하게 쓰이고 병렬화에 있어서는 collect()가 유리하다. 반대로 이외의 간단한 작업들은 reduce가 더 유리하다.
+
+## 2.8 스트림의 변환
++ 스트림을 다른 타입으로 변환할때 어떤 메서드를 사용해야하는지 정리한 파트.
++ 책참고하기.
