@@ -666,3 +666,21 @@ class StreamEx4 {
     }
 }
 ```
+## 2.4 Optional\<T\>와 OptionalInt
++ 이전 중간연산에 반환값이 Optional인 경우들이 있는데, Optional에 대해 알다보자.
+```
+public final class Optional<T> {
+      private final T value;
+      ....
+}
+```
++ Optional 타입의 객체에는 모든 타입의 참조변수를 넣을 수 있다.
++ 이렇게 Optional 객체에 담아서 반환을 하면, 반환된 결과가 null인지 매번 if문으로 체크하는 대신 Optional에 정의된 메서드를 통해서 간단하게 처리할 수 있다.
+
+### Optional 객체 생성하기
++ of() 또는 ofNullable() 사용한다. 만일 참조변수의 값이 null일 가능성이 있으면 of() 대신 ofNullable()을 사용해야한다.
++ Optional<T> 타입의 참조변수를 기본값으로 초기화할때는 null로 초기화하기 보다는 empty()를 사용한다.
+```
+Optional<String> optVal = Optional.<String>empty(); // <String>은 추정가능하므로 생략가능   
+```
+### Optional 객체의 값 가져오기.
