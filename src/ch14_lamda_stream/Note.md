@@ -766,7 +766,13 @@ void forEach(Consumer<? super T> action)
 + 이전에 본것처럼 IntStream에는 여러 통계메서드가 있지만, 기본형 스트림이 아닌 경우에는 count(), max(), min()만 존재한다.
 
 ### 리듀싱 - reduce()
-+ 스트림의 요소를 줄여나가면서 연산을 수행하고 최종결과를 반환한다. 그래서 매개변수 타입이 BinaryOperatior\<T\>이다. 처음 두요소를 가지고 연산한 결과를 가지고 그 다음 요소와 연산한다.
++ 스트림의 요소를 줄여나가면서 연산을 수행하고 최종결과를 반환한다. 그래서 매개변수 타입이 BinaryOperatior\<T\>이다. 처음 두요소를 가지고 연산한 결과를 가지고 그 다음 요소와 연산한다.(StringBuffer의 개념과 비슷하다.)
+```java
+Optional<T> reduce(BinaryOperator<T> accumulator)
+====================초기값이 있을때============================
+T reduce (T identitiy, BinaryOperator<T> accumulator)
+U reduce (U identitiy, BiFunction<U,T,U> accumulator, BinaryOperator<T> combiner) // 처리된 결과를 합치는 combiner
+```
 + 반환타입으로 Optional\<T\> 를 가진다. 추가로 초기값을 가지는 reduce()는 T를 반환타입으로 가진다.
 + 기본형 스트림에서 reduce()를 사용하면 반환타입으로 OptionalInt를 가진다.
 + reduce()는 초기값과 어떤 연산으로 스트림의 요소를 줄여나갈지만 잘 판단하면 된다.
