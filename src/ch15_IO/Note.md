@@ -147,3 +147,30 @@ SequenceInputStream(InputStream s1, InputStream s2)     : 두개의 입력스트
 + print, println, printf 메서드들은 자주 사용되기 때문에 기반스트림에서 IOException이 발생하면 예외처리를 시키는 것이 아니라 내부에서 처리하도록 정의하였다.
 + checkError()를 통해 에러를 인지할수 있다.
 + printf() 의 여러 format(형식화된 출력)은 책을 참고하자. 또는 APi document의 Formatter 클래스를 참고하자.
+
+# 4. 문자기반 스트림
++ 바이트기반 스트림과 문자기반스트림의 사용방법은 같으며, 문자데이터를 다루는데 사용된다는 점만 다르다.
+
+## 4.1 Reader와 Writer
++ 바이트기반 스트림의 조상이 InputStream/OutputStream 인것과 같이 문자기반스트림에서는 Reader와 Writer가 조상이다.
++ 또한 byte배열대신 char배열을 사용한다는 점이 다르다.
++ 이외에는 다른점이 없으며, 메서드 또한 다르지 않다.( 책참고)
++ 문자기반 스트림은 2byte로 스트림을 처리하는것을 넘어서, 인코딩기능이 있다.
++ Reader는 특정 인코딩을 읽어서 유니코드(UTF-16)로 변환하고, Writer는 유니크드를 특정 인코딩으로 변환하여 저장한다.
+
+## 4.2 FilteReader와 FileWriter
++ 책과 코드참고(FileReaderEx1,FileConversion)
+
+## 4.3 PipedReader와 PipedWritre
++ 쓰레드 간에 데이터를 주고받을 때 사용한다. 다른 스트림과 달리 입력과 출력스트림을 하나의 스트림으로 연결해서 데이터를 주고받는다.
++ 책 or 코드참고(PipedReaderWriter)
++ 쓰레드가 시작하기 전에 연결해야한다는 것에 유의하자.
+
+## 4.4 StringReader와 StringWriter
++ CharArrayReader/CharArrayWriter와 같이 입출력 대상이 메모리인 스트림이다.
++ StringWriter에 출력되는 데이터는 내부의 StringBuffer에 저장되며 StringWriter의 메서드를 이용해서 저장된 데이터를 얻을 수 있다.
+```
+StringBuffer getBuffer()        : StringWriter에 출력한 데이터가 저장된 StringBuffer를 반환한다.
+String toString()               : StringWriter에 출력된  (StringBuffer에 저장된) 문자열을 반환한다.
+```
+
