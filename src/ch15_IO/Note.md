@@ -174,3 +174,14 @@ StringBuffer getBuffer()        : StringWriter에 출력한 데이터가 저장�
 String toString()               : StringWriter에 출력된  (StringBuffer에 저장된) 문자열을 반환한다.
 ```
 
+# 5. 문자기반의 보조스트림
+## 5.1 BufferedReader와 BufferedWriter
++ 버퍼를 이용해서 입출력의 효율을 높일 수 있다.
+
+## 5.2 InputStreamReader와 OutputStreamWriter
++ 바이트기반 스트림을 문자기반 스트림으로 연결해주는 역할을 한다. 그리고 바이트기반 스트림의 데이터를 **지정된 인코딩**의 문자데이터로 변환하는 작업을 수행한다.
+```
+InputStreamReader(InputStream in)                   : OS에서 사용하는 기본 인코딩의 문자로 변환하는 InputStreamReader를 생성
+InputStreamReader(InputStream in, String encoding)  : 지정된 인코딩을 사용하는 InputStreamReader를 생성
+String getEncoding()                                : InputStreamReader의 인코딩을 알려준다.
+```
