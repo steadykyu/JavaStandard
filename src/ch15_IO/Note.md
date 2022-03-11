@@ -90,4 +90,60 @@ class IOEx4 {
 
 ## 2.3 FileInputStream과 FileOutputStream
 + **파일**에 입출력을 하기위한 스트림이다.
-+ 책 또는 코드의 예시를 참고하자.(FileView.java, FileCopy.java)
++ 책의 생성자와 코드의 예시를 참고하자.(FileView.java, FileCopy.java)
+
+# 3. 바이트 기반의 보조스트림
+## 3.1 FilterInputStream과 FilterOutputStream
++ FilterInputStream과 FilterOutputStream는 InputStream과 OutputStream의 자손이면서 모든 보조스트림의 **조상**이다.
+> 생성자
+```
+protected FilterInputStream(InputStream in)
+public    FilterOutputStream(OutputStream out)
+```
++ FilterInputStream과 FilterOutputStream의 모든 메서드는 단순히 기반스트림의 메서드를 그대로 호출할 뿐이다.
++ 즉 상속을 통해 원하는 작업 수행하도록 읽고 쓰는 메서드를 오버라이딩 해야한다.
++ FilterInputStream은 protected 하므로 인스턴스를 생성할 수 없다.
+```
+FilterInputStream의 자손 : BufferedInputStream, DataInputStream, PushbackInputStream등
+FilterOutputStream의 자손 : BufferedOutputStream, DataOutputStream, PrintStream 등
+```
+## 3.2 BufferedInputStream과 BufferedOutputStream
++ 스트림의 입출력 효율을 높이기 위해 버퍼를 사용하는 보조 스트림이다. 한 바이트보다는 버퍼(바이트 배열)를 이용해서 입출력하는것이 훨씬 빠르므로 입출력 작업에 사용된다.
+> 생성자 
+```
+BufferedInputStream(InputStream in, int size)       : 지정된 크기의 버퍼를 갖는 BufferedInputStream인스턴스를 생성한다.
+BufferedInputStream(InputStream in)                 : 8192byte의 버퍼를 가지고 인스턴스를 생성한다.
+```
+> 생성자 / 메서드
+```
+BufferedOutputStream(OutputStream out, int size)    : 지정된 크기의 버퍼를 갖는 BufferedOutputStream인스턴스를 생성한다.
+BufferedOutputStream(OutputStream out)              : 8192byte의 버퍼를 가지고 인스턴스를 생성한다.
+flush()                                             : 버퍼의 모든 내용을 출력소스에 출력한 후 버퍼를 비운다.
+close()                                             : flush()롤 호출한후 BufferedOutputStream인스턴스가 사용하던 모든 자원을 반환한다.
+```
++ BufferedOutputStream은 버퍼가 가득 찼을때만 출력소스에 출력을 하기 때문에 close()나 flush()를 호출해서 마지막 버퍼에 있는 내용이 출력소스에 출력되도록 해야한다.
++ 보조스트림을 사용한 경우에는 기반스트림의 close()나 flush()는 호출할 필요없이 단순히 보조스트림의 close()만 호출하면된다.
++ 보조스트림의 close()안에서 오버라이딩 없이 그대로 기반스트림의 close()를 호출하기 때문이다.
+
+## 3.3 DataInputStream과 DataOutputStream
++ 각각 DataInput인터페이스, DataOutput인터페이스를 구현하였다.
++ 데이터를 읽고 쓰는데 있어 byte단위가 아닌 8가지 기본자료형의 단위로 읽고쓸수 있다는 장점이 있다.
++ 예) readInt(), readLong(), readDouble() ....etc
++ 생성자와 메서드는 책을 참고하자.
++ 각 자료형의 크기가 다르므로 출력한 데이터를(output) 다시 읽어올때는(input) 출력했을때의 순서대로 읽어와야한다.
+
+## 3.4 SequenceInputStream
++ 여러개의 입력스트림을 **연속적으로 연결해서** 하나의 스트림으로부터 데이터를 읽는 것과 같이 처리할수 있도록 도와준다.
+```
+//참고 Vector.elements() 의 반환값 - Enumeration
+SequenceInputStream(Enumeration e)                      : Enumeration에 저장된 순서대로 입력스트림을 하나의 스트림으로 연결한다.
+SequenceInputStream(InputStream s1, InputStream s2)     : 두개의 입력스트림을 하나로 연결한다.
+```
+
+## 3.5 PrintStream
++ 데이터를 기반스트림에 다양한 형태로 출력할 수 있는 print, println, printf와같은 메서드를 오버로딩하여 제공한다.
++ 데이터를 적절한 문자로 출력하는 문자기반 스트림의 역할이다.
++ 사실 더 많은 언어를 처리하는 PrintWriter가 있지만 오랬동안 System.out?(PrintStream) 이 대중화되어 계속 쓰이고 있다.
++ print, println, printf 메서드들은 자주 사용되기 때문에 기반스트림에서 IOException이 발생하면 예외처리를 시키는 것이 아니라 내부에서 처리하도록 정의하였다.
++ checkError()를 통해 에러를 인지할수 있다.
++ printf() 의 여러 format(형식화된 출력)은 책을 참고하자. 또는 APi document의 Formatter 클래스를 참고하자.
