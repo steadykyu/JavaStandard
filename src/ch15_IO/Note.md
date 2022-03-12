@@ -245,3 +245,76 @@ f.createNewFile();
 ```
 + File 에서 사용할수 있는 메서드는 책을 참고하자!
 + 메서드를 이용한 파일 입출력은 꼭 코드를 참고해서 돌려보고, 결과를 확인해 보도록 하자.
+
+# 7.직렬화(Serialization)
++ 객체를 컴퓨터에 저장했다가 다음에 꺼내쓰거나, 네트웍을 통해 컴퓨터 간에 서로 객체를 주고받을 수 없을까 ? 라는 고민에서 탄생한 개념이다.
+## 7.1 직렬화란?
++ 직렬화란 객체를 데이터 스트림으로 만드는것으로, 객체에 저장된 데이터를 스트림에 쓰기(Write)위해 연속적인(serial) 데이터로 변환하는 것을 말한다.
++ 반대로 스트림으로부터 데이터를 읽어서 객체를 만드는 것을 역직렬화(deserialization)라고 한다.
++ 여기서 객체는 클래스에 정의된 **인스턴스 변수의 집합**이다. 객체에는 클래스변수나 메서드가 포함되지 않는다.
++ 우리는 ObjectInputStream과 ObjectOutputStream을 사용하여 손쉽게 객체를 직렬화/역직렬화 할수 있다.
+
+## 7.2 ObjectInputStream, ObjectOutputStream
++ 직렬화에는 ObjectOutputStream을 사용하고, 역직렬화에는 ObjectInputStream을 사용한다.
++ 이 둘은 InputStream과 OutputStream을 직접 상속받지만, 기반스트림을 필요로 하는 **보조 스트림**이다.
+> 직렬화 하는 방식
+```
+FileOutputStream fos = new FileOutputStream("objectfile.ser"); // 직렬화는 관례적으로 .ser로 저장한다.
+ObjectOutputStream out = new ObjectOutputStream(fos);           // 기반스트림을 필요로한다.
+out.writeObject(new UserInfo());                                // 객체를 넣어주면 직렬화 성공!
+```
++ 객체를 writeObject()로 출력하면, 객체가 파일에 직렬화 되어 저장된다.
++ 역직렬화는 같은 방식으로 FileInputStream, ObjectInputStream을 써주면 된다.
++ ObjectInputStream, ObjectOutputStream에는 readObject(), writeObject() 외의 많은 메서드를 제공한다.(책 참고!, readInt(), readUTF() 등)
++ 객체를 직렬화/역직렬화 하는 작업은 **객체의 모든 인스턴스변수가 참조하고 있는 모든 객체**를 대상으로 진행되므로 상당히 시간이 오래걸린다.
++ 만약 직렬화 작업시간을 줄이고 싶다면, readObject(), writeObject()를 메서드를 구현함으로써 가능하다.(코드참고 - UserInfo2.java)
+
+## 7.3 직렬화가 가능한 클래스 만들기
++ **Serializable, transient**
++ 직렬화가 가능한 클래스를 만드는 방법은 직렬화 하고자하는 클래스가 java.io.Serializable interface를 구현하도록 하면 된다.
++ Serializable interface는 아무런 내용도 없는 빈 인터페이스 이지만, **직렬화를 고려하여 작성한 클래스인지를 판단하는 기준**이된다.
++ Serializable을 구현한 클래스를 상속받는다면, Serializable를 구현하지 않아도 직렬화가 가능하다.
+> 직렬화 클래스를 상속받는 경우
+```
+public class SuperInfo implements Serializable{
+        String name;
+        String password;
+}
+public class UserInfo extends SuperInfo{        //UserInfo는 직렬화가 가능
+        int age;
+}               
+```
+> 자식만 직렬화 클래스인 경우
+```
+public class SuperInfo {
+        String name;
+        String password;
+}
+public class UserInfo extends SuperInfo implements Serializable{
+        int age;
+}               
+```
++ 자손클래스를 직렬화 할때, 조상클래스에 정의된 인스턴스 변수 name과 password는 직렬화 대상에서 제외된다.
++ 직렬화 되도록 하기위해서는 조상클래스에 Serializable를 구현하도록 하거나
++ readObject(), writeObject()에 readUFT(name)/writeUFT(name)과 readUFT(password)/writeUFT(name) 추가하여 직접 직렬화 해주어야한다.
++ 세부적인 내용은 책과 코드를 참고하자.
+
+### transient
++  직렬화 하고자 하는 객체의 클래스안에 직렬화가 안되는 객체에 대한 참조를 포함하고 있다면 제어자 transient를 붙여서 직렬화 대상에서 제외되도록 할 수 있다.
++  또한 보안상 직렬화 되면 안되는 값에 대해서도 transient를 사용할 수 있다.(예) password)
+```
+public class UserInfo implements Serializable{
+        String name;
+        transient String password;  //직렬화 대상에서 제외된다.
+        int     age;
+        transient Object obj = new Object(); // Object객체는 직렬화 할수없으므로, 직렬화대상에서 제외시켜주어야한다.(책참고)
+}
+```
++ 직렬화 후 역직렬화해보면 obj와 password에는 null이 들어가있다.
+
+## 7.4 직렬화가능한 클래스의 버전관리
++ 직렬화된 객체를 역직렬화할 때는 직렬화 했을때와 같은 버전의 클래스를 사용해야한다.
++ serialVersionUID라는 버전은 **클래스의 정의된 멤버들(인스턴스변수)**를 통해 만든다.
++ 즉 클래스의 정의된 멤버(인스턴스변수)가 동일한 클래스를 역직렬화 과정에서 사용해야 한다는 의미이다.
++ serialVersionUID는 수동으로 정의해 줄수는 있으나, 서로 다른 클래스간에 같은 값을 갖지 않도록 serialver.exe 를 활용해 자동으로 생성된 값을 사용하는 것이 보통이다.
++ serialver.exe는 클래스에 serialVersionUID가 정의되어있으면 그 값을 출력하고, 정의되어있지않으면 자동 생성한 값을 출력한다.(이때 멤버들의 정보를 바탕으로 생성함)
