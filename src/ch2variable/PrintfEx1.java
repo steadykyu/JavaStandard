@@ -1,27 +1,30 @@
+package ch2variable;
 class PrintfEx1 {
 	public static void main(String[] args) {
-		byte  b = 1;
+		byte b = 1;
 		short s = 2;
-		char  c = 'A';
+		char c = 'A';
 
-		int  finger = 10; 
-		long big = 100_000_000_000L;       
-		long hex = 0xFFFF_FFFF_FFFF_FFFFL ;  // long hex = 0xFFFFFFFFFFFFFFFFL;
+		int finger = 10;
+		long big = 100_000_000_000L;
+		long hex = 0xFFFF_FFFF_FFFF_FFFFL;  // long hex = 0xFFFFFFFFFFFFFFFFL;
 
-		int octNum = 010;       //  8Áø¼ö 10, 10Áø¼ö·Î´Â 8
-		int hexNum = 0x10;      // 16Áø¼ö 10, 10Áø¼ö·Î´Â 16
-		int binNum = 0b10;      //  2Áø¼ö 10, 10Áø¼ö·Î´Â 2
+		// 8, 16, 2 ì§„ë²• ì…ë ¥í˜•íƒœ
+		int octNum = 010;       //  8ì§„ìˆ˜ 10, 10ì§„ìˆ˜ë¡œëŠ” 8
+		int hexNum = 0x10;      // 16ì§„ìˆ˜ 10, 10ì§„ìˆ˜ë¡œëŠ” 16
+		int binNum = 0b10;      //  2ì§„ìˆ˜ 10, 10ì§„ìˆ˜ë¡œëŠ” 2
 
 		System.out.printf("b=%d%n", b);
 		System.out.printf("s=%d%n", s);
-		System.out.printf("c=%c, %d %n", c, (int)c);
-		System.out.printf("finger=[%5d]%n",  finger);
+		System.out.printf("c=%c, %d %n", c, (int) c);
+		System.out.printf("finger=[%5d]%n", finger);
 		System.out.printf("finger=[%-5d]%n", finger);
 		System.out.printf("finger=[%05d]%n", finger);
 		System.out.printf("big=%d%n", big);
-		System.out.printf("hex=%#x%n", hex); // '#'Àº Á¢µÎ»ç(16Áø¼ö 0x, 8Áø¼ö 0)
-		System.out.printf("octNum=%o, %d%n", octNum, octNum);   
-		System.out.printf("hexNum=%x, %d%n", hexNum, hexNum);   
-		System.out.printf("binNum=%s, %d%n", Integer.toBinaryString(binNum), binNum);  
+		System.out.printf("hex=%#x%n", hex); // '#'ì€ ì ‘ë‘ì‚¬(16ì§„ìˆ˜ 0x, 8ì§„ìˆ˜ 0)
+		System.out.printf("octNum=%o, %d%n", octNum, octNum);
+		System.out.printf("hexNum=%x, %d%n", hexNum, hexNum);
+		System.out.printf("binNum=%s, %d%n", Integer.toBinaryString(binNum), binNum);
 	}
 }
+

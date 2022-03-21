@@ -1,3 +1,4 @@
+package ch2variable;
 class CastingEx2 {
 	public static void main(String[] args) {
 		int  i = 10;
@@ -16,6 +17,6 @@ class CastingEx2 {
 		i = (int)b;
 		System.out.printf("[byte -> int] b=%d -> i=%d%n", b, i); 
 
-		System.out.println("i="+Integer.toBinaryString(i));
+		System.out.println("i="+Integer.toBinaryString(i));			// 2진법으로 나타내는 메서드로 String으로 반환된다.
 	}
 }

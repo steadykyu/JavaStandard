@@ -1,3 +1,4 @@
+package ch2variable;
 class VarEx2 {
 	public static void main(String[] args) {
 		int x = 10;
@@ -13,3 +14,4 @@ class VarEx2 {
 		System.out.println("x:"+ x + " y:" + y);
 	}
 }
+// tmp 를 이용한 값 교환하기.

@@ -1,9 +1,10 @@
+package ch2variable;
 class SpecialCharEx {
 	public static void main(String[] args) {
-		System.out.println('\'');		     //  '''Ã³·³ ÇÒ ¼ö ¾ø´Ù.
-		System.out.println("abc\t123\b456"); // \b¿¡ ÀÇÇØ 3ÀÌ Áö¿öÁø´Ù.
-		System.out.println('\n');		     //  °³Çà(new line)¹®ÀÚ Ãâ·ÂÇÏ°í °³Çà
-		System.out.println("\"Hello\"");	 //  Å«µû¿ÈÇ¥¸¦ Ãâ·ÂÇÏ·Á¸é ÀÌ·¸°Ô ÇÑ´Ù.
+		System.out.println('\'');		     //  '''ì²˜ëŸ¼ í•  ìˆ˜ ì—†ë‹¤.
+		System.out.println("abc\t123\b456"); // \bì— ì˜í•´ 3ì´ ì§€ì›Œì§„ë‹¤.
+		System.out.println('\n');		     //  ê°œí–‰(new line)ë¬¸ì ì¶œë ¥í•˜ê³  ê°œí–‰
+		System.out.println("\"Hello\"");	 //  í°ë”°ì˜´í‘œë¥¼ ì¶œë ¥í•˜ë ¤ë©´ ì´ë ‡ê²Œ í•œë‹¤.
 		System.out.println("c:\\");
 	}
 }
